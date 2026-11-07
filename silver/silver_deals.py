@@ -22,6 +22,16 @@ WITH fx AS (
         ('SEK', 11.0260),
         ('GBP', 0.83415)
     ) AS t(currency, units_per_eur)
+),
+deduped AS (
+    -- The raw feed repeats some deals; keep one row per deal
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY deal_id
+            ORDER BY last_stage_changed_at DESC
+        ) AS rn
+    FROM bronze_deals
 )
 SELECT
     deal_id,
@@ -65,9 +75,10 @@ SELECT
         ELSE DATE_DIFF('day', CAST(created_at AS DATE), CURRENT_DATE)
     END AS deal_age_days
 
-FROM bronze_deals d
+FROM deduped d
 LEFT JOIN fx
-    ON UPPER(d.currency) = fx.currency;
+    ON UPPER(d.currency) = fx.currency
+WHERE d.rn = 1;
 """)
 
 print("Created silver_deals")

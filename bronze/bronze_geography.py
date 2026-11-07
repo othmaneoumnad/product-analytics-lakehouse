@@ -37,5 +37,5 @@ SELECT
 FROM raw_geography_df;
 """)
 
-print("Created bronze_geography table successfully.")
+print("Created bronze_geography")
 con.close()

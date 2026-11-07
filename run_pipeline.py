@@ -25,10 +25,12 @@ STEPS = [
     "gold/gold_fact_product_events.py",
     "gold/gold_fact_product_events_aggregated.py",
     "gold/gold_fact_advanced_activation.py",
+
+    "checks/data_quality_checks.py",
 ]
 
 for step in STEPS:
     print(f"--> {step}", flush=True)
     subprocess.run([sys.executable, os.path.join(HERE, step)], check=True)
 
-print("Pipeline complete.")
+print("Pipeline complete; all data-quality checks passed.")

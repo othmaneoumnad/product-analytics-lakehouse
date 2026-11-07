@@ -48,6 +48,6 @@ FROM deduped
 WHERE rn = 1;
 """)
 
-print("✅ Created silver_geography")
+print("Created silver_geography")
 
 con.close()

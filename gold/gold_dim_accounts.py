@@ -43,8 +43,6 @@ con.execute("""
     ORDER BY AccountId;
 """)
 
-print("✅ Created gold_dim_accounts")
+print("Created gold_dim_accounts")
 
 con.close()
-
-

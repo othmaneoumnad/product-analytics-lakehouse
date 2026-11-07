@@ -106,6 +106,6 @@ SELECT
 FROM enriched;
 """)
 
-print("✅ Created silver_product_events")
+print("Created silver_product_events")
 
 con.close()

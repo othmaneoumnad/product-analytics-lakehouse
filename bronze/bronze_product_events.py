@@ -31,6 +31,6 @@ SELECT
 FROM raw__product_events;
 """)
 
-print("✅ Created bronze_product_events")
+print("Created bronze_product_events")
 
 con.close()

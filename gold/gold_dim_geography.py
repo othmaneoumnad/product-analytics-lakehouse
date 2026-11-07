@@ -22,6 +22,6 @@ con.execute("""
     ORDER BY CountryCode;
 """)
 
-print("✅ Created gold_dim_geography")
+print("Created gold_dim_geography")
 
 con.close()

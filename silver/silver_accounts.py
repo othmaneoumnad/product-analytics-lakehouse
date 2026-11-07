@@ -72,5 +72,5 @@ LEFT JOIN silver_geography g
     ON UPPER(TRIM(a.country_code)) = g.country_code;
 """)
 
-print("✅ Created silver_accounts (with trimmed join keys)")
+print("Created silver_accounts")
 con.close()

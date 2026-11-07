@@ -114,6 +114,6 @@ LEFT JOIN deals d
 ORDER BY a.AccountId;
 """)
 
-print("✅ Created gold_fact_advanced_activation")
+print("Created gold_fact_advanced_activation")
 
 con.close()

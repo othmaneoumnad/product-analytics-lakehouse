@@ -30,6 +30,6 @@ SELECT
 FROM raw__deals;
 """)
 
-print("✅ Created bronze_deals table")
+print("Created bronze_deals")
 
 con.close()

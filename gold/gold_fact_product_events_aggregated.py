@@ -33,5 +33,5 @@ ORDER BY
     AccountId;
 """)
 
-print(" ✅Created gold_fact_product_events_aggregated")
+print("Created gold_fact_product_events_aggregated")
 con.close()

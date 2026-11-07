@@ -53,6 +53,6 @@ SELECT
 FROM bronze_users;
 """)
 
-print(" Created silver_users")
+print("Created silver_users")
 
 con.close()

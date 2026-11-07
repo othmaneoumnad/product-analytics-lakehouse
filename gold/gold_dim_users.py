@@ -34,5 +34,5 @@ FROM silver_users
 ORDER BY UserId;
 """)
 
-print("✅Created gold_dim_users")
+print("Created gold_dim_users")
 con.close()

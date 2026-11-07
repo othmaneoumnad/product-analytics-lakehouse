@@ -46,5 +46,5 @@ con.execute("""
     ORDER BY DealId;
 """)
 
-print("✅Created gold_fact_deals")
+print("Created gold_fact_deals")
 con.close()

@@ -40,5 +40,5 @@ WHERE has_event_id
 ORDER BY EventId;
 """)
 
-print("✅Created gold_fact_product_events")
+print("Created gold_fact_product_events")
 con.close()

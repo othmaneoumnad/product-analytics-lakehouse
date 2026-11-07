@@ -29,6 +29,6 @@ SELECT
 FROM raw__accounts;
 """)
 
-print("Created bronze_accounts table successfully.")
+print("Created bronze_accounts")
 
 con.close()
