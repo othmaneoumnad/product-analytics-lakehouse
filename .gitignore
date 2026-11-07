@@ -1,0 +1,13 @@
+# Data and course material (not published)
+*.db
+*.duckdb
+*.xlsx
+*.pbix
+Docs/
+Power BI Screenshots/
+
+# Local files
+~$*
+.DS_Store
+__pycache__/
+.venv/
