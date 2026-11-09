@@ -2,9 +2,9 @@
 *.db
 *.duckdb
 *.xlsx
+# .pbix files contain the data; the report is published as a .pbit template
 *.pbix
 Docs/
-Power BI Screenshots/
 
 # Local files
 ~$*

@@ -1,0 +1,143 @@
+// DAX measures in the Power BI report (table: _Measures), grouped by display folder.
+//
+// Deal measures use TREATAS on the date they describe (created or closed), so each
+// one is filtered by the right date regardless of the active relationship.
+// Activation measures use the pipeline's IsActivated and TimeToValueDays columns,
+// so the report and the gold layer share one definition of activation.
+
+
+// ---------------------------------------------------------------------------
+// Activations
+// ---------------------------------------------------------------------------
+
+Accounts Created =
+DISTINCTCOUNT ( gold_fact_advanced_activation[AccountId] )
+
+Activated Accounts =
+CALCULATE (
+    DISTINCTCOUNT ( gold_fact_advanced_activation[AccountId] ),
+    gold_fact_advanced_activation[IsActivated] = TRUE ()
+)
+
+Activation Rate =
+DIVIDE ( [Activated Accounts], [Accounts Created] )
+
+Avg. Time to Value (Days) =
+CALCULATE (
+    AVERAGE ( gold_fact_advanced_activation[TimeToValueDays] ),
+    gold_fact_advanced_activation[IsActivated] = TRUE ()
+)
+
+Avg. Core Events (First 14 Days) =
+AVERAGE ( gold_fact_advanced_activation[CoreEventsInFirst14Days] )
+
+Avg. Deals (First 14 Days) =
+AVERAGE ( gold_fact_advanced_activation[DealsInFirst14Days] )
+
+
+// ---------------------------------------------------------------------------
+// Accounts and health
+// ---------------------------------------------------------------------------
+
+Total Accounts =
+CALCULATE (
+    DISTINCTCOUNT ( gold_dim_accounts[AccountId] ),
+    REMOVEFILTERS ( dim_date )
+)
+
+Non-Activated Accounts =
+CALCULATE (
+    DISTINCTCOUNT ( gold_fact_advanced_activation[AccountId] ),
+    gold_fact_advanced_activation[IsActivated] = FALSE ()
+)
+
+// Rolling windows end on the last date in the current filter context
+Active Accounts (Last 7 Days) =
+VAR MaxDate = MAX ( dim_date[Date] )
+RETURN
+    CALCULATE (
+        DISTINCTCOUNT ( gold_fact_product_events_aggregated[AccountId] ),
+        DATESINPERIOD ( dim_date[Date], MaxDate, -7, DAY )
+    )
+
+Active Accounts (Last 14 Days) =
+VAR MaxDate = MAX ( dim_date[Date] )
+RETURN
+    CALCULATE (
+        DISTINCTCOUNT ( gold_fact_product_events_aggregated[AccountId] ),
+        DATESINPERIOD ( dim_date[Date], MaxDate, -14, DAY )
+    )
+
+Active Accounts (Last 30 Days) =
+VAR MaxDate = MAX ( dim_date[Date] )
+RETURN
+    CALCULATE (
+        [Active Accounts],
+        DATESINPERIOD ( dim_date[Date], MaxDate, -30, DAY )
+    )
+
+Inactive Accounts (Last 14 Days) =
+[Total Accounts] - [Active Accounts (Last 14 Days)]
+
+Active Account Rate =
+DIVIDE ( [Active Accounts (Last 14 Days)], [Total Accounts] )
+
+
+// ---------------------------------------------------------------------------
+// Usage
+// ---------------------------------------------------------------------------
+
+Events =
+COUNT ( gold_fact_product_events[EventId] )
+
+Unique Users =
+DISTINCTCOUNTNOBLANK ( gold_fact_product_events[UserId] )
+
+Active Accounts =
+DISTINCTCOUNT ( gold_fact_product_events_aggregated[AccountId] )
+
+Events per Active Account =
+DIVIDE ( [Events], [Active Accounts] )
+
+
+// ---------------------------------------------------------------------------
+// Deals
+// ---------------------------------------------------------------------------
+
+Deals Created =
+CALCULATE (
+    DISTINCTCOUNT ( gold_fact_deals[DealId] ),
+    REMOVEFILTERS ( dim_date ),
+    TREATAS ( VALUES ( dim_date[Date] ), gold_fact_deals[CreatedDate] )
+)
+
+Deals Closed =
+CALCULATE (
+    DISTINCTCOUNT ( gold_fact_deals[DealId] ),
+    REMOVEFILTERS ( dim_date ),
+    TREATAS ( VALUES ( dim_date[Date] ), gold_fact_deals[ClosedDate] ),
+    gold_fact_deals[IsClosed] = TRUE ()
+)
+
+Deals Won =
+CALCULATE (
+    DISTINCTCOUNT ( gold_fact_deals[DealId] ),
+    REMOVEFILTERS ( dim_date ),
+    TREATAS ( VALUES ( dim_date[Date] ), gold_fact_deals[ClosedDate] ),
+    gold_fact_deals[IsWon] = TRUE ()
+)
+
+Win Rate =
+DIVIDE ( [Deals Won], [Deals Closed] )
+
+Avg. Deal Cycle (Days) =
+CALCULATE (
+    AVERAGE ( gold_fact_deals[DealCycleDays] ),
+    REMOVEFILTERS ( dim_date ),
+    TREATAS ( VALUES ( dim_date[Date] ), gold_fact_deals[ClosedDate] ),
+    gold_fact_deals[IsClosed] = TRUE ()
+)
+
+// Amounts converted to EUR in the silver layer (fixed ECB reference rates)
+Total Deal Amount =
+SUM ( gold_fact_deals[DealAmountEUR] )

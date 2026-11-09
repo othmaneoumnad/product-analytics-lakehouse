@@ -60,6 +60,7 @@ Issues found in the raw data and how each is handled:
 | Events with no event ID | 616 | Flagged in silver, excluded from gold |
 | Events with no account | 641 | Flagged in silver, excluded from gold |
 | Events with a valid account but no user | 1,128 | Kept as account activity; flagged (`HasValidUser`) so user counts can exclude them |
+| Events logged under an account other than the user's own (artifact of the synthetic data) | 57,056 | Kept; user counts are not broken down by account attributes such as market, which would double-count users |
 | Duplicate deals | 35 | Deduplicated in silver |
 | Deal amounts in five currencies (EUR, DKK, NOK, SEK, GBP) | 6,408 | Converted to EUR (`DealAmountEUR`) at fixed ECB reference rates; original amount and currency kept |
 | Event-name variants (`Login`, `user_login`, `ViewDashboard`) | 260 | Standardized; original name kept in `event_name_raw` |
@@ -96,9 +97,31 @@ Logic: [`gold/gold_fact_advanced_activation.py`](gold/gold_fact_advanced_activat
 - **Most early engagement stalls halfway.** 68 of the 89 engaged accounts showed one signal but not the other. Onboarding should connect product usage to the first deal.
 - **Activation is slow even when it happens.** Activated accounts took 9.9 days on average (median 10), and 18 of 21 needed a week or more.
 - **Deals:** 58.5% win rate on closed deals, a 62-day median sales cycle, and €12.9M won.
-- **Concentration:** the Nordic market accounts for half of all accounts, product events, and deals.
+- **Concentration:** the Nordic market accounts for half of all accounts, product events, and deals. Events per active account are similar across markets (about 470 to 510), so the Nordic lead comes from having more customers, not from heavier use.
 
 The data is synthetic, so these figures demonstrate the method rather than describe a real company.
+
+## Power BI report
+
+The report reads only the gold tables, so its figures match the pipeline. It holds 23 DAX measures ([`powerbi/measures.dax`](powerbi/measures.dax)) and a date table that spans every year in the data ([`powerbi/dim_date.dax`](powerbi/dim_date.dax)). The first three pages below show the full dataset; the health page shows 2029, because its 14-day activity windows need a reference date.
+
+**Executive Overview:** accounts, product events, and deals by month and market.
+
+![Executive Overview page](powerbi/screenshots/01-executive-overview.png)
+
+**Product Usage and Adoption:** feature usage by category, event, and month.
+
+![Product Usage and Adoption page](powerbi/screenshots/02-product-usage-and-adoption.png)
+
+**Activation and Time-to-Value:** activated accounts, activation rate, and time to value by sign-up month and market.
+
+![Activation and Time-to-Value page](powerbi/screenshots/03-activation-and-time-to-value.png)
+
+**Activation Funnel and Health Monitoring (2029):** accounts active in the last 14 days of each month, by market.
+
+![Activation Funnel and Health Monitoring page](powerbi/screenshots/04-health-monitoring-2029.png)
+
+**Opening the report.** [`powerbi/product-analytics-report.pbit`](powerbi/product-analytics-report.pbit) is a Power BI template: it contains the model, measures, and pages, but no data. It needs the DuckDB Power Query connector and the database built by the pipeline; update the database path in each query's Source step.
 
 ## How to run
 
@@ -123,7 +146,7 @@ The source data is not included in this repository. The pipeline expects two fil
 ├── silver/            # cleaning, standardization, data-quality flags
 ├── gold/              # star schema, aggregates, activation model
 ├── checks/            # data-quality checks run after every build
-├── powerbi/           # DAX date table used in the Power BI model
+├── powerbi/           # report template (.pbit), DAX measures, date table, screenshots
 ├── run_pipeline.py    # runs every step in dependency order
 └── requirements.txt
 ```

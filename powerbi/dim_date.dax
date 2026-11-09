@@ -1,7 +1,8 @@
 dim_date = 
 VAR TodayDate = TODAY()
-VAR StartDate = DATE( YEAR(TodayDate) - 2, MONTH(TodayDate), DAY(TodayDate) )
-VAR EndDate   = DATE( YEAR(TodayDate) + 1, MONTH(TodayDate), DAY(TodayDate) )
+-- Span every year in the data: first account sign-up to last deal close
+VAR StartDate = DATE ( YEAR ( MIN ( gold_dim_accounts[CreatedDate] ) ), 1, 1 )
+VAR EndDate   = DATE ( YEAR ( MAX ( gold_fact_deals[ClosedDate] ) ), 12, 31 )
 
 VAR MinYear = YEAR ( StartDate )
 VAR MinYM   = YEAR ( StartDate ) * 12 + MONTH ( StartDate )
