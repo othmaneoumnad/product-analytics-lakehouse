@@ -3,7 +3,7 @@
 A Bronze/Silver/Gold data pipeline in DuckDB and Python that turns raw SaaS product data into a tested, BI-ready star schema and an account activation model.
 
 **Stack:** Python · SQL (DuckDB) · Power BI · DAX  
-**Case study:** [othmaneoumnad.github.io](https://othmaneoumnad.github.io/product-analytics-lakehouse-medallion-pipeline.html)
+**Case study:** [othmaneoumnad.github.io](https://othmaneoumnad.github.io/product-analytics.html)
 
 ## Context
 
