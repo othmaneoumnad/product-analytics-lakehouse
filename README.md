@@ -134,14 +134,15 @@ pip install -r requirements.txt
 python run_pipeline.py
 ```
 
-The source data is not included in this repository. The pipeline expects two files in the project root:
+The source data is not included in this repository. The pipeline expects two files in a `data/` folder:
 
-- `product_analytics_light.db`: a DuckDB database with `raw__accounts`, `raw__users`, `raw__deals`, and `raw__product_events`
-- `Module_2_raw__geography--.xlsx`: the country-to-market mapping
+- `data/product_analytics_light.db`: a DuckDB database with `raw__accounts`, `raw__users`, `raw__deals`, and `raw__product_events`
+- `data/geography.xlsx`: the country-to-market mapping
 
 ## Repository structure
 
 ```
+├── data/              # source data and DuckDB database (not included)
 ├── bronze/            # structural copy of the raw sources
 ├── silver/            # cleaning, standardization, data-quality flags
 ├── gold/              # star schema, aggregates, activation model

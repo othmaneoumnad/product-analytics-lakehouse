@@ -6,6 +6,7 @@ con = duckdb.connect(
     os.path.join(
         os.path.dirname(__file__),
         "..",
+        "data",
         "product_analytics_light.db"
     )
 )

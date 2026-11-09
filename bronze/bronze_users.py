@@ -2,7 +2,7 @@ import os
 import duckdb
 
 con = duckdb.connect(
-    os.path.join(os.path.dirname(__file__), "..", "product_analytics_light.db")
+    os.path.join(os.path.dirname(__file__), "..", "data", "product_analytics_light.db")
 )
 
 con.execute("""

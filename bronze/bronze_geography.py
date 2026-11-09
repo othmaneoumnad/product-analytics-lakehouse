@@ -7,6 +7,7 @@ con = duckdb.connect(
     os.path.join(
         os.path.dirname(__file__),
         "..",
+        "data",
         "product_analytics_light.db"
     )
 )
@@ -15,7 +16,8 @@ con = duckdb.connect(
 excel_path = os.path.join(
     os.path.dirname(__file__),
     "..",
-    "Module_2_raw__geography--.xlsx"
+    "data",
+    "geography.xlsx"
 )
 
 # --- Load Excel into DataFrame ---
